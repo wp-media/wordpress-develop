@@ -393,6 +393,12 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 				} );
 			}
 
+			var widget_node = $( '#' + this.widgetid );
+
+			if( widget_node.length > 0 ) {
+				widget_node[0].scrollIntoView( { behavior: "smooth" } );
+			}
+
 			return refreshPromise;
 		},
 
