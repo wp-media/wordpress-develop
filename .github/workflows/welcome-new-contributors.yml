@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.repository == 'WordPress/wordpress-develop' }}
 
     steps:
-      - uses: wow-actions/welcome@fafa00fbd13d9c5d0fbd761c249153506c62bcd8 # v1.1.0
+      - uses: wow-actions/welcome@e6abd10d45c9647b048db4a9f8b557ffbb520adc # v1.1.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIRST_PR_COMMENT: >
