@@ -2,6 +2,9 @@
 name: Pull Request Comments
 
 on:
+  pull_request:
+    branches:
+      - trunk
   pull_request_target:
     types: [ 'opened' ]
   workflow_run:
@@ -160,6 +163,46 @@ jobs:
             For more details about these limitations and more, check out the [Limitations page](https://wordpress.github.io/wordpress-playground/limitations/) in the WordPress Playground documentation.
 
             [Test this pull request with WordPress Playground](https://playground.wordpress.net/wordpress.html?pr=${ issue_number }).
+            `;
+
+            github.rest.issues.createComment( commentInfo );
+
+
+
+  no-trac-url-included:
+    name: Comment on a pull request when no Trac ticket is included
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Add the comment
+        uses: JJ/github-pr-contains-action@releases/v11
+        with:
+          github-token: ${{github.token}}
+          bodyDoesNotContain: "core\.trac\.wordpress\.org\/ticket\/\d+"
+          script: |
+            const fs = require( 'fs' );
+            const issue_number = Number( fs.readFileSync( './NR' ) );
+
+            // Comments are only added after the first successful build. Check for the presence of a comment and bail early.
+            const commentInfo = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+            };
+
+            const comments = ( await github.rest.issues.listComments( commentInfo ) ).data;
+
+            for ( const currentComment of comments ) {
+              if ( currentComment.user.type === 'Bot' && currentComment.body.includes( 'Test Comment from ahmed' ) ) {
+                return;
+              }
+            };
+
+            // No comment was found. Create one.
+            commentInfo.body = `## Test Comment from ahmed
+            Hi Hi Hi
             `;
 
             github.rest.issues.createComment( commentInfo );
