@@ -175,10 +175,6 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
-    if: >
-      github.repository == 'wp-media/wordpress-develop' &&
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Add the comment
         uses: JJ/github-pr-contains-action@releases/v11
