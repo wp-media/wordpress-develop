@@ -163,3 +163,35 @@ jobs:
             `;
 
             github.rest.issues.createComment( commentInfo );
+
+
+      - name: Comment on a PR when no Trac ticket is included
+        uses: JJ/github-pr-contains-action@releases/v11
+        with:
+          github-token: ${{github.token}}
+          bodyDoesNotContain: "core\.trac\.wordpress\.org\/ticket\/\d+"
+          script: |
+            const fs = require( 'fs' );
+            const issue_number = Number( fs.readFileSync( './NR' ) );
+
+            // Comments are only added after the first successful build. Check for the presence of a comment and bail early.
+            const commentInfo = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+            };
+
+            const comments = ( await github.rest.issues.listComments( commentInfo ) ).data;
+
+            for ( const currentComment of comments ) {
+              if ( currentComment.user.type === 'Bot' && currentComment.body.includes( 'Test Comment from ahmed' ) ) {
+                return;
+              }
+            };
+
+            // No comment was found. Create one.
+            commentInfo.body = `## Test Comment from ahmed
+            Hi Hi Hi
+            `;
+
+            github.rest.issues.createComment( commentInfo );
