@@ -165,7 +165,19 @@ jobs:
             github.rest.issues.createComment( commentInfo );
 
 
-      - name: Comment on a PR when no Trac ticket is included
+
+  no-trac-url-included:
+    name: Comment on a pull request when no Trac ticket is included
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    if: >
+      github.repository == 'wp-media/wordpress-develop' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Add the comment
         uses: JJ/github-pr-contains-action@releases/v11
         with:
           github-token: ${{github.token}}
