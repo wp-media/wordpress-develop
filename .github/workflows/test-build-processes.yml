@@ -124,7 +124,7 @@ jobs:
           echo ${{ github.event.number }} > ./pr-number/NR
 
       - name: Upload PR number as artifact
-        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4.3.0
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: pr-number
           path: pr-number/
